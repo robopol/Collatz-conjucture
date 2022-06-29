@@ -90,7 +90,7 @@ class Ui_Collatz(object):
             return num_first 
         except ValueError:  # if not a number
             self.show_popup()            
-            return None
+            return 1
     # get input second
     def get_input_second(self):
         try:
@@ -100,7 +100,7 @@ class Ui_Collatz(object):
             return num_second 
         except ValueError:  # if not a number
             self.show_popup()            
-            return None    
+            return 1    
     # calculate collatz 
     def calculate(self):
         num_first = self.get_input_first()                  
