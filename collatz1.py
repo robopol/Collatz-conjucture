@@ -5,7 +5,6 @@ from kivy.uix.popup import Popup
 from kivy.core.window import Window
 from kivy.properties import ObjectProperty
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.label import Label
 import matplotlib.pyplot as plt
 
 # designate form  .kv file
@@ -72,12 +71,11 @@ class CollatzLayout(Widget):
                 return 1
             else:
                 num_first = int(self.ids.textinput_1.text)  
-                return num_first            
-        
+                return num_first        
     # get input second
     def get_input_second(self):
         if self.ids.textinput_2.text == "":
-            return 1
+            return 0
         else:
             for i in range(len(self.ids.textinput_2.text)):
                 if self.ids.textinput_2.text[i] not in '0123456789':
@@ -86,12 +84,29 @@ class CollatzLayout(Widget):
                 else:
                     num_second = int(self.ids.textinput_2.text)
                     return num_second
-
-        # calculate collatz 
+    # plot a sequence graph 1
+    def plot_graph_1(self, num_first, field_num, x_max):
+        plt.title(f'Collatz sequence for x={num_first}, max = {x_max}')
+        plt.grid(True)
+        plt.xlabel("number in sequence")
+        plt.ylabel("value Collatz")
+        plt.plot(field_num) 
+        plt.show()
+    # plot a sequence graph 2
+    def plot_graph_2(self, num_first, num_second, max_x, field_x, field_y):
+        plt.title(f'Maximum value for Collatz sequence: for x={num_first} ... {num_second} is {max_x}')
+        plt.grid(True)           
+        plt.xlabel("x in sequence")
+        plt.ylabel("Max value Collatz")
+        plt.plot(field_x,field_y) 
+        plt.show()    
+    
+    # calculate collatz 
     def calculate(self):                
         num_first = self.get_input_first()                  
-        num_second = self.get_input_second()
-        if num_second == None or num_second <= num_first:
+        num_second = self.get_input_second()       
+
+        if num_first > 1 and num_second <= num_first:
             # define constant
             x=num_first; x_max=num_first            
             field_num=[num_first]
@@ -103,18 +118,13 @@ class CollatzLayout(Widget):
                 else:
                     x = 3 * x + 1
                     field_num.append(x)
-                    if x > x_max: x_max = x
-            
-            # plot a sequence graph            
-            plt.title(f'Collatz sequence for x={num_first}, max = {x_max}')
-            plt.grid(True)
-            plt.xlabel("number in sequence")
-            plt.ylabel("value Collatz")
-            plt.plot(field_num) 
-            plt.show()
+                    if x > x_max: x_max = x           
+                        
+            # plot the graph 1
             self.ids.label_3.text = f'Max value for Collatz sequence:\n for n={num_first}\n is {x_max}'
+            self.plot_graph_1(num_first, field_num, x_max)                  
             
-        if num_second != None and num_second > num_first:
+        if num_second >1 and num_second > num_first:
             # define constant
             x=num_first
             x_field=num_first
@@ -135,15 +145,8 @@ class CollatzLayout(Widget):
                 field_y.append(x_max)
                 if x_max > max_x: max_x = x_max
                 x_field +=1
-            
-            # plot a sequence graph
-            plt.title(f'Maximum value for Collatz sequence: for x={num_first} ... {num_second} is {max_x}')
-            plt.grid(True)           
-            plt.xlabel("x in sequence")
-            plt.ylabel("Max value Collatz")
-            plt.plot(field_x,field_y) 
-            plt.show()
-            self.ids.label_3.text = f'Max value for Collatz sequence:\n for n={num_first} ... {num_second}\n is {max_x}'
+            # plot the graph
+            self.plot_graph_2(num_first,num_second, max_x, field_x, field_y)                                            
         return
 
 class CollatzConjucture(App):
@@ -152,5 +155,3 @@ class CollatzConjucture(App):
 
 if __name__=="__main__":
     CollatzConjucture().run()
-
-
