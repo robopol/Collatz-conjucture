@@ -65,6 +65,9 @@ def show_popup():
 class CollatzLayout(Widget):    
     # get input first
     def get_input_first(self):
+        if self.ids.textinput_1.text == "":
+            show_popup()
+            return 1
         for i in range(len(self.ids.textinput_1.text)):
             if self.ids.textinput_1.text[i] not in '0123456789':
                 show_popup()
